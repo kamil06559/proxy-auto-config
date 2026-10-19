@@ -26,3 +26,10 @@ The standard way to run a PAC file is to hand it to a JavaScript engine. That pu
 ## The edge you will hit
 
 The evaluator does not implement `dnsResolve`, `myIpAddress` returns a fixed `127.0.0.1`, and the time-based predicates (`weekdayRange`, `dateRange`, `timeRange`) always return `false`. A PAC file that relies on live DNS resolution or on the current wall-clock time to make a routing decision will not behave as it would in a browser. `isInNet` works against literal IP addresses in the URL host but cannot resolve a hostname to an IP first. If your PAC file depends on any of these, this library will give you a deterministic but possibly incorrect answer rather than a dynamic one.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
